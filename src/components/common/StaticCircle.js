@@ -5,6 +5,15 @@ import range from 'lodash.range';
 import { interpolateHcl as interpolateGradient } from 'd3-interpolate';
 
 
+function calculateArcColor(index0, segments, gradientColorFrom, gradientColorTo) {
+  const interpolate = interpolateGradient(gradientColorFrom, gradientColorTo);
+
+  return {
+    fromColor: interpolate(index0 / segments),
+    toColor: interpolate((index0 + 1) / segments),
+  }
+}
+
 function calculateArcCircle(index0, segments, radius, startAngle0 = 0, angleLength0 = 2 * Math.PI) {
   // Add 0.0001 to the possible angle so when start = stop angle, whole circle is drawn
   const startAngle = startAngle0 % (2 * Math.PI);
@@ -35,76 +44,31 @@ function getGradientId(index) {
   return `gradient${index}`;
 }
 
-export default class CircularSlider extends PureComponent {
+export default class StaticCircle extends PureComponent {
 
   static propTypes = {
-    onUpdate: PropTypes.func.isRequired,
     startAngle: PropTypes.number.isRequired,
     angleLength: PropTypes.number.isRequired,
     segments: PropTypes.number,
     strokeWidth: PropTypes.number,
     radius: PropTypes.number,
-    buttonColor: PropTypes.string,
-    buttonBorderColor: PropTypes.string
+    gradientColorFrom: PropTypes.string,
+    gradientColorTo: PropTypes.string,
+    bgCircleColor: PropTypes.string
   }
 
   static defaultProps = {
     segments: 5,
     strokeWidth: 40,
     radius: 145,
-    buttonColor: 'yellow',
-    buttonBorderColor: 'green',
+    gradientColorFrom: '#ff9800',
+    gradientColorTo: '#ffcf00',
+    bgCircleColor: '#800000',
   }
 
   state = {
     circleCenterX: false,
     circleCenterY: false,
-  }
-
-  componentWillMount() {
-    this._sleepPanResponder = PanResponder.create({
-      onMoveShouldSetPanResponder: (evt, gestureState) => true,
-      onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
-      onPanResponderGrant: (evt, gestureState) => this.setCircleCenter(),
-      onPanResponderMove: (evt, { moveX, moveY }) => {
-        const { circleCenterX, circleCenterY } = this.state;
-        const { angleLength, startAngle, onUpdate } = this.props;
-
-        const currentAngleStop = (startAngle + angleLength) % (2 * Math.PI);
-        let newAngle = Math.atan2(moveY - circleCenterY, moveX - circleCenterX) + Math.PI/2;
-
-        if (newAngle < 0) {
-          newAngle += 2 * Math.PI;
-        }
-
-        let newAngleLength = currentAngleStop - newAngle;
-
-        if (newAngleLength < 0) {
-          newAngleLength += 2 * Math.PI;
-        }
-
-        onUpdate({ startAngle: newAngle, angleLength: newAngleLength % (2 * Math.PI) });
-      },
-    });
-
-    this._wakePanResponder = PanResponder.create({
-      onMoveShouldSetPanResponder: (evt, gestureState) => true,
-      onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
-      onPanResponderGrant: (evt, gestureState) => this.setCircleCenter(),
-      onPanResponderMove: (evt, { moveX, moveY }) => {
-        const { circleCenterX, circleCenterY } = this.state;
-        const { angleLength, startAngle, onUpdate } = this.props;
-
-        let newAngle = Math.atan2(moveY - circleCenterY, moveX - circleCenterX) + Math.PI/2;
-        let newAngleLength = (newAngle - startAngle) % (2 * Math.PI);
-
-        if (newAngleLength < 0) {
-          newAngleLength += 2 * Math.PI;
-        }
-
-        onUpdate({ startAngle, angleLength: newAngleLength });
-      },
-    });
   }
 
   onLayout = () => {
@@ -124,7 +88,7 @@ export default class CircularSlider extends PureComponent {
   }
 
   render() {
-    const { startAngle, angleLength, segments, strokeWidth, radius, buttonColor, buttonBorderColor} = this.props;
+    const { startAngle, angleLength, segments, strokeWidth, radius, gradientColorFrom, gradientColorTo, bgCircleColor} = this.props;
 
     const containerWidth = this.getContainerWidth();
 
@@ -138,10 +102,23 @@ export default class CircularSlider extends PureComponent {
           width={containerWidth}
           ref={circle => this._circle = circle}
         >
-
+          <Defs>
+            {
+              range(segments).map(i => {
+                const { fromX, fromY, toX, toY } = calculateArcCircle(i, segments, radius, startAngle, angleLength);
+                const { fromColor, toColor } = calculateArcColor(i, segments, gradientColorFrom, gradientColorTo)
+                return (
+                  <LinearGradient key={i} id={getGradientId(i)} x1={fromX.toFixed(2)} y1={fromY.toFixed(2)} x2={toX.toFixed(2)} y2={toY.toFixed(2)}>
+                    <Stop offset="0%" stopColor={fromColor} />
+                    <Stop offset="1" stopColor={toColor} />
+                  </LinearGradient>
+                )
+              })
+            }
+          </Defs>
 
           {/*
-            ##### Circle where the button will move
+            ##### Circle
           */}
 
           <G transform={{ translate: `${strokeWidth/2 + radius + 1}, ${strokeWidth/2 + radius + 1}` }}>
@@ -149,6 +126,7 @@ export default class CircularSlider extends PureComponent {
               r={radius}
               strokeWidth={strokeWidth}
               fill="transparent"
+              stroke={bgCircleColor}
             />
 
             {
@@ -168,20 +146,31 @@ export default class CircularSlider extends PureComponent {
               })
             }
 
+            {/*
+              ##### Stop Icon
+            */}
+
+            <G transform={{ translate: `${stop.toX}, ${stop.toY}` }}>
+              <Circle
+                r={(strokeWidth - 1) / 2}
+                fill="#800000"
+                stroke={gradientColorTo}
+                strokeWidth="1"
+              />
+            </G>
 
             {/*
-              ##### Circle Icon
+              ##### Start Icon
             */}
 
             <G
+              fill={gradientColorFrom}
               transform={{ translate: `${start.fromX}, ${start.fromY}` }}
-              onPressIn={() => this.setState({ startAngle: startAngle - Math.PI / 2})}
-              {...this._sleepPanResponder.panHandlers}
             >
               <Circle
                 r={(strokeWidth - 1) / 2}
-                fill={buttonColor}
-                stroke={buttonBorderColor}
+                fill="#0083FF"
+                stroke={gradientColorFrom}
                 strokeWidth="1"
               />
             </G>
