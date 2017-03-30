@@ -62,7 +62,7 @@ class LivingRoomTemperature extends Component {
     return (
       <View>
 
-        <Text style={[centerItems, textStyle, { top: 30, fontSize: 20 }]}>Living Room</Text>
+        <Text style={[centerItems, textStyle, { top: 30, fontSize: 25, color: '#5F5F5F' }]}>Living Room</Text>
 
         <View style={SliderContainer}>
           <StaticCircle

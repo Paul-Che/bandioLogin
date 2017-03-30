@@ -6,8 +6,8 @@ import LivingRoomTemperature from './components/LivingRoomTemperature';
 const RouterComponent = () => {
   return(
     <Router>
-      <Scene key="Login" component={LoginForm} hideNavBar={true} />
-      <Scene key="LivingRoomTemperature" component={LivingRoomTemperature} hideNavBar={true} initial />
+      <Scene key="Login" component={LoginForm} hideNavBar={true} initial />
+      <Scene key="LivingRoomTemperature" component={LivingRoomTemperature} hideNavBar={true}  />
     </Router>
   );
 };
