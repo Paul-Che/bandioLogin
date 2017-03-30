@@ -1,20 +1,29 @@
 import React, { Component } from 'react';
-import { View, Text, StatusBar } from 'react-native';
-import CircleSlider from './common/CircleSlider';
+import { AppRegistry, StyleSheet, Text, View, StatusBar } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import Svg, { G, Path } from 'react-native-svg';
 import CircularSlider from './common/CircularSlider';
+import StaticCircle from './common/StaticCircle';
 import TimerText from './common/TimerText';
 
+const pi = Math.PI;
+
 function roundAngleToFives(angle) {
-  const fiveMinuteAngle = 2 * Math.PI / 144;
+  const fiveMinuteAngle = 2 * pi / 144;
+
   return Math.round(angle / fiveMinuteAngle) * fiveMinuteAngle;
 }
 
 function calculateTemperaturesFromAngle(angle) {
-  return Math.round(angle / (2 * Math.PI / (12 * 12)) / 6);
+  return Math.round(angle / (2 * pi / (12 * 12)) / 6);
 }
 
 class LivingRoomTemperature extends Component {
-  state = { value: 15, startAngle: Math.PI * 10/8, angleLength: Math.PI * 12/8 };
+
+  state = {
+    startAngle: 10/9 * pi,
+    angleLength: 1.8 * pi,
+  }
 
   onUpdate = ({ startAngle, angleLength }) => {
     this.setState({
@@ -24,82 +33,73 @@ class LivingRoomTemperature extends Component {
   }
 
   render() {
-    const { container } = styles;
     const { startAngle, angleLength } = this.state;
+    const { textStyle, centerItems, SliderContainer } = styles;
 
-    return(
+    return (
       <View>
-        <StatusBar hidden={true} />
-        <View style={{ paddingTop: 10, paddingBottom: 10, borderWidth: 1 }}>
-          <Text style={{ fontFamily: 'HelveticaNeue-Light', fontSize: 17, alignSelf: 'center', color: '#A4A4A4' }}>Living Room</Text>
+
+        <Text style={[centerItems, textStyle, { top: 30, fontSize: 20 }]}>Living Room</Text>
+
+        <View style={SliderContainer}>
+          <StaticCircle
+            startAngle={10/9 * pi}
+            angleLength={ 1.8 * pi}
+            segments={20}
+            strokeWidth={37}
+            radius={130}
+            gradientColorFrom="#0083FF"
+            gradientColorTo="#800000"
+            bgCircleColor="white"
+          />
+        </View>
+        <View style={SliderContainer}>
+          <CircularSlider
+            startAngle={startAngle}
+            angleLength={angleLength}
+            onUpdate={this.onUpdate}
+            segments={20}
+            strokeWidth={37}
+            radius={130}
+            buttonColor="white"
+            buttonBorderColor="white"
+          />
         </View>
 
-        <View style={{ marginTop: 20, marginBottom: 20, borderWidth: 1 }}>
-          <Text style={{ fontFamily: 'HelveticaNeue-Light', fontSize: 17, alignSelf: 'center', color: '#A4A4A4' }}>Current temp.</Text>
-        </View>
+        <Text style={[centerItems, textStyle, { top: 220, fontSize: 14 }]}>Desired Temp.</Text>
 
-        <View style={styles.containerCircular}>
-          <View>
-            <TimerText
-              style={styles.currentTempContainer}
-              minutesLong={calculateTemperaturesFromAngle(startAngle)}
-            />
-            <View style={styles.currentTempText}>
-              <Text>Current temp.</Text>
-            </View>
-            <CircularSlider
-              startAngle={startAngle}
-              angleLength={angleLength}
-              onUpdate={this.onUpdate}
-              segments={20}
-              strokeWidth={40}
-              radius={145}
-              gradientColorFrom="#0083FF"
-              gradientColorTo="#800000"
-              bgCircleColor="white"
-            />
-          </View>
-        </View>
+        <TimerText
+          style={[centerItems, { top: 235 }]}
+          fontSize={75}
+          textStyle={textStyle}
+          desiredTemp={calculateTemperaturesFromAngle(startAngle)}
+        />
+
+        <Text style={[centerItems, textStyle, { top: 500, fontSize: 14 }]}>Current Temp.</Text>
+
+
 
       </View>
     );
   }
 }
 
-const styles = {
-  container: {
-    borderWidth: 1,
-    marginTop: 20,
-    marginLeft: 10,
-    marginRight: 10,
-    alignItems: 'stretch',
-    justifyContent: 'center'
-  },
-  containerCircular: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  currentTempContainer: {
-    flex: 1,
+const styles = StyleSheet.create({
+  centerItems: {
+    alignSelf: 'center',
     justifyContent: 'center',
+    position: 'absolute'
+  },
+  textStyle:{
+    fontFamily: 'HelveticaNeue-Light',
+    color: '#A4A4A4'
+  },
+  SliderContainer: {
+    justifyContent: 'center',
+    alignSelf: 'center',
     position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0
-  },
-  currentTempText: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1
-  },
-  circle: {
-    width: 40,
-    height: 40,
-    borderRadius: 100/2,
-    backgroundColor: 'red'
+    top: 120
   }
-};
+});
 
 export default LivingRoomTemperature;
