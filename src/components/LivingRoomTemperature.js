@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { AppRegistry, StyleSheet, Text, View, StatusBar } from 'react-native';
+import axios from 'axios';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Svg, { G, Path } from 'react-native-svg';
 import CircularSlider from './common/CircularSlider';
@@ -10,12 +11,15 @@ const pi = Math.PI;
 
 function roundAngleToFives(angle) {
   const fiveMinuteAngle = 2 * pi / 144;
-
   return Math.round(angle / fiveMinuteAngle) * fiveMinuteAngle;
 }
 
 function calculateTemperaturesFromAngle(angle) {
-  return Math.round(angle / (2 * pi / (12 * 12)) / 6);
+  let desiredTemp = Math.round(angle / (2 * pi / (12 * 12)) / 6);
+  if (desiredTemp < 13) {
+    desiredTemp += 25;
+  }
+  return desiredTemp;
 }
 
 class LivingRoomTemperature extends Component {
@@ -23,6 +27,20 @@ class LivingRoomTemperature extends Component {
   state = {
     startAngle: 10/9 * pi,
     angleLength: 1.8 * pi,
+    temperatures: [],
+    error: ''
+  }
+
+  componentWillMount() {
+    axios.get('https://api.myjson.com/bins/16qbyn')
+      .then(response => this.setState({ temperatures: response.data.temperatures }))
+      .catch(this.onGetLastTempFail.bind(this));
+  }
+
+  onGetLastTempFail() {
+    this.setState({
+      error: 'Request to get last temperature failed'
+    });
   }
 
   onUpdate = ({ startAngle, angleLength }) => {
@@ -32,8 +50,13 @@ class LivingRoomTemperature extends Component {
     });
   }
 
+  renderLastTemperature() {
+    return this.state.temperatures[0]
+  }
+
   render() {
-    const { startAngle, angleLength } = this.state;
+
+    const { startAngle, angleLength, temperatures } = this.state;
     const { textStyle, centerItems, SliderContainer } = styles;
 
     return (
@@ -44,7 +67,7 @@ class LivingRoomTemperature extends Component {
         <View style={SliderContainer}>
           <StaticCircle
             startAngle={10/9 * pi}
-            angleLength={ 1.8 * pi}
+            angleLength={1.8 * pi}
             segments={20}
             strokeWidth={37}
             radius={130}
@@ -69,13 +92,14 @@ class LivingRoomTemperature extends Component {
         <Text style={[centerItems, textStyle, { top: 220, fontSize: 14 }]}>Desired Temp.</Text>
 
         <TimerText
-          style={[centerItems, { top: 235 }]}
+          style={[centerItems, { top: 237 }]}
           fontSize={75}
           textStyle={textStyle}
           desiredTemp={calculateTemperaturesFromAngle(startAngle)}
         />
 
         <Text style={[centerItems, textStyle, { top: 500, fontSize: 14 }]}>Current Temp.</Text>
+        <Text style={[centerItems, textStyle, { top: 517, fontSize: 75 }]}>{this.renderLastTemperature()}</Text>
 
 
 
