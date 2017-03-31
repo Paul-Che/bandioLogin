@@ -1,13 +1,17 @@
 import React, { Component } from 'react';
-import { AppRegistry, StyleSheet, Text, View, StatusBar } from 'react-native';
+import { AppRegistry, StyleSheet, Text, View, StatusBar, TouchableHighlight } from 'react-native';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { Actions } from 'react-native-router-flux';
+import Dimensions from 'Dimensions';
 import Svg, { G, Path } from 'react-native-svg';
 import CircularSlider from './common/CircularSlider';
 import StaticCircle from './common/StaticCircle';
 import TimerText from './common/TimerText';
+import MonthlySummaryTemperature from './MonthlySummaryTemperature';
 
 const pi = Math.PI;
+const window = Dimensions.get('window');
 
 function roundAngleToFives(angle) {
   const fiveMinuteAngle = 2 * pi / 144;
@@ -61,6 +65,7 @@ class LivingRoomTemperature extends Component {
 
     return (
       <View>
+        <StatusBar hidden={true} />
 
         <Text style={[centerItems, textStyle, { top: 30, fontSize: 25, color: '#5F5F5F' }]}>Living Room</Text>
 
@@ -101,7 +106,9 @@ class LivingRoomTemperature extends Component {
         <Text style={[centerItems, textStyle, { top: 500, fontSize: 14 }]}>Current Temp.</Text>
         <Text style={[centerItems, textStyle, { top: 517, fontSize: 75 }]}>{this.renderLastTemperature()}</Text>
 
-
+        <TouchableHighlight onPress={() => Actions.MonthlySummaryTemperature()}>
+          <Icon name="arrow-right" style={[textStyle, {fontSize: 18, top: window.height-40, left: window.width-40}]} />
+        </TouchableHighlight>
 
       </View>
     );
