@@ -7,9 +7,9 @@ import MonthlySummaryTemperature from './components/MonthlySummaryTemperature';
 const RouterComponent = () => {
   return(
     <Router>
-      <Scene key="Login" component={LoginForm} hideNavBar={true} />
-      <Scene key="LivingRoomTemperature" component={LivingRoomTemperature} hideNavBar={true} />
-      <Scene key="MonthlySummaryTemperature" component={MonthlySummaryTemperature} title="Temperature History" hideNavBar={false} initial/>
+      <Scene key="Login" component={LoginForm} hideNavBar={true}  />
+      <Scene key="LivingRoomTemperature" component={LivingRoomTemperature} hideNavBar={true} initial />
+      <Scene key="MonthlySummaryTemperature" component={MonthlySummaryTemperature} title="Temperature History" hideNavBar={false}/>
     </Router>
   );
 };

@@ -61,54 +61,62 @@ class LivingRoomTemperature extends Component {
   render() {
 
     const { startAngle, angleLength, temperatures } = this.state;
-    const { textStyle, centerItems, SliderContainer } = styles;
+    const { textStyle, centerContainer, SliderContainer } = styles;
 
     return (
-      <View>
+      <View style={{ height: window.height, width: window.width }}>
         <StatusBar hidden={true} />
 
-        <Text style={[centerItems, textStyle, { top: 30, fontSize: 25, color: '#5F5F5F' }]}>Living Room</Text>
-
-        <View style={SliderContainer}>
-          <StaticCircle
-            startAngle={10/9 * pi}
-            angleLength={1.8 * pi}
-            segments={20}
-            strokeWidth={37}
-            radius={130}
-            gradientColorFrom="#0083FF"
-            gradientColorTo="#800000"
-            bgCircleColor="white"
-          />
-        </View>
-        <View style={SliderContainer}>
-          <CircularSlider
-            startAngle={startAngle}
-            angleLength={angleLength}
-            onUpdate={this.onUpdate}
-            segments={20}
-            strokeWidth={37}
-            radius={130}
-            buttonColor="white"
-            buttonBorderColor="white"
-          />
+        <View style={[centerContainer, {height: window.height/5}]}>
+          <Text style={[textStyle, { fontSize: 25, color: '#5F5F5F' }]}>Living Room</Text>
         </View>
 
-        <Text style={[centerItems, textStyle, { top: 220, fontSize: 14 }]}>Desired Temp.</Text>
+        <View style={[centerContainer, { flex: 1 }]}>
+          <View style={{ position: 'absolute' }}>
+            <StaticCircle
+              startAngle={10/9 * pi}
+              angleLength={1.8 * pi}
+              segments={20}
+              strokeWidth={37}
+              radius={130}
+              gradientColorFrom="#0083FF"
+              gradientColorTo="#800000"
+              bgCircleColor="white"
+            />
+          </View>
+          <View style={{ position: 'absolute' }}>
+            <CircularSlider
+              startAngle={startAngle}
+              angleLength={angleLength}
+              onUpdate={this.onUpdate}
+              segments={20}
+              strokeWidth={37}
+              radius={130}
+              buttonColor="white"
+              buttonBorderColor="white"
+            />
+          </View>
 
-        <TimerText
-          style={[centerItems, { top: 237 }]}
-          fontSize={75}
-          textStyle={textStyle}
-          desiredTemp={calculateTemperaturesFromAngle(startAngle)}
-        />
+          <Text style={textStyle}>Desired Temp.</Text>
 
-        <Text style={[centerItems, textStyle, { top: 500, fontSize: 14 }]}>Current Temp.</Text>
-        <Text style={[centerItems, textStyle, { top: 517, fontSize: 75 }]}>{this.renderLastTemperature()}</Text>
+          <TimerText
+            textStyle={[textStyle, { fontSize: 75}]}
+            desiredTemp={calculateTemperaturesFromAngle(startAngle)}
+          />
+        </View>
+
+        <View style={[centerContainer, { height: window.height/4 }]}>
+          <Text style={textStyle}>Current Temp.</Text>
+          <Text style={[textStyle, { fontSize: 75 }]}>{this.renderLastTemperature()}</Text>
+        </View>
+
 
         <TouchableHighlight onPress={() => Actions.MonthlySummaryTemperature()}>
-          <Icon name="arrow-right" style={[textStyle, {fontSize: 18, top: window.height-40, left: window.width-40}]} />
+          <Icon name="arrow-right" style={[textStyle, {fontSize: 18, alignSelf: 'flex-end'}]} />
         </TouchableHighlight>
+
+
+
 
       </View>
     );
@@ -116,20 +124,14 @@ class LivingRoomTemperature extends Component {
 }
 
 const styles = StyleSheet.create({
-  centerItems: {
-    alignSelf: 'center',
+  centerContainer: {
     justifyContent: 'center',
-    position: 'absolute'
+    alignItems: 'center'
   },
   textStyle:{
     fontFamily: 'HelveticaNeue-Light',
-    color: '#A4A4A4'
-  },
-  SliderContainer: {
-    justifyContent: 'center',
-    alignSelf: 'center',
-    position: 'absolute',
-    top: 120
+    color: '#A4A4A4',
+    fontSize: 14
   }
 });
 
