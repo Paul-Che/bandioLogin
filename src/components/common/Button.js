@@ -22,12 +22,9 @@ const styles = {
     paddingBottom: 10
   },
   buttonStyle: {
-    backgroundColor: '#FE1743',
-    borderRadius: 25,
+    borderRadius: 15,
     borderWidth: 1,
-    borderColor: '#B7254C',
-    marginLeft: 100,
-    marginRight: 100
+    borderColor: '#B7254C'
   }
 };
 

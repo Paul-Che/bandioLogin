@@ -61,7 +61,7 @@ class LivingRoomTemperature extends Component {
   render() {
 
     const { startAngle, angleLength, temperatures } = this.state;
-    const { textStyle, centerContainer, SliderContainer } = styles;
+    const { textStyle, centerContainer } = styles;
 
     return (
       <View style={{ height: window.height, width: window.width }}>

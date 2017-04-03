@@ -1,98 +1,141 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Text, View, StatusBar } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {
-    VictoryAxis, VictoryLine, VictoryChart, VictoryStack, VictoryTheme, VictoryScatter
+import { VictoryAxis, VictoryLine, VictoryChart, VictoryStack, VictoryTheme,
+   VictoryScatter, VictoryGroup, VictoryBar
   } from "victory-native";
 import { Card } from './common/Card';
 import { CardSection } from './common/CardSection';
 import { Button } from './common/Button';
 
-const MonthlySummaryTemperature = ({ temperatures }) => {
-  const data2012 = [
-    {hour: 1, temperature: 15},
-    {hour: 2, temperature: 20},
-    {hour: 3, temperature: 22},
-    {hour: 4, temperature: 18},
-    {hour: 5, temperature: 20}
-  ];
+const dataTemp = [
+  {x: 1, y: 15},
+  {x: 2, y: 20},
+  {x: 3, y: 22},
+  {x: 4, y: 18},
+  {x: 5, y: 20}
+];
 
-  const {
-    thumbnailStyle,
-    headerContentStyle,
-    IconContainerStyle,
-    headerTextStyle,
-    otherButtonStyle,
-    imageStyle
-   } = styles;
+class MonthlySummaryTemperature extends Component {
 
-  return(
-    <View style={{marginTop: 50}}>
-      <Card>
-        <CardSection>
-          <View style={IconContainerStyle}>
-            <Icon style={{ fontSize: 20 }} name="thermometer-quarter" />
-          </View>
-          <View style={headerContentStyle}>
-            <Text style={headerTextStyle}>Periodic Summary of Temperatures</Text>
-            <Text>Since Mai 2016</Text>
-          </View>
-        </CardSection>
 
-        <CardSection>
-          <VictoryChart
-            domainPadding={10}
-            domain={{x: [1, 5], y: [10, 30]}}
-            theme={VictoryTheme.grayscale}
-          >
-            <VictoryAxis
-              tickValues={[1, 2, 3, 4, 5]}
-              tickFormat={["0h", "6h", "12h", "18h", "24h"]}
-              style={{
-                axis: {stroke: "white"}
-              }}
-            />
-            <VictoryAxis
-              style={{
-                axis: {stroke: "white"},
-                grid: {stroke: "grey", strokeWidth: 1}
-              }}
-              dependentAxis
-              tickFormat={(y) => `${y}°C`}
-            />
-            <VictoryLine
-              style={{ data: { stroke: "#800000", strokeWidth:2 } }}
-              data={data2012}
-              x="hour"
-              y="temperature"
-            />
-            <VictoryScatter
-              style={{ data: { stroke: "#800000", strokeWidth:2 } }}
-              data={[
-                {hour: "0h", profit: 15, loss: 1},
-                {hour: "6h", profit: 20, loss: 2},
-                {hour: "12h", profit: 22, loss: 3},
-                {hour: "18h", profit: 18, loss: 4},
-                {hour: "24h", profit: 20, loss: 5}
-              ]}
-              x="hour"
-              y={(datum) => datum.profit - datum.loss}
-            />
-          </VictoryChart>
-        </CardSection>
 
-        <CardSection style={{ justifyContent: 'space-around' }}>
-          <Button otherButtonStyle={otherButtonStyle} otherTextStyle={{ color: 'black' }}>
-            Temperatures
-          </Button>
-          <Button otherButtonStyle={otherButtonStyle} otherTextStyle={{ color: 'black' }}>
-            Humidity
-          </Button>
-        </CardSection>
 
-      </Card>
-    </View>
-  );
+   onPressWaypoint(datum) {
+      console.log(datum);
+    };
+
+  render() {
+
+    const {
+      thumbnailStyle,
+      headerContentStyle,
+      IconContainerStyle,
+      headerTextStyle,
+      otherButtonStyle,
+      imageStyle
+     } = styles;
+
+    return(
+      <View style={{marginTop: 20}}>
+        <Card>
+          <CardSection>
+            <View style={IconContainerStyle}>
+              <Icon style={{ fontSize: 20 }} name="thermometer-quarter" />
+            </View>
+            <View style={headerContentStyle}>
+              <Text style={headerTextStyle}>Periodic Summary of Temperatures</Text>
+              <Text>Since Mai 2016</Text>
+            </View>
+          </CardSection>
+
+          <CardSection>
+            <VictoryChart
+              domainPadding={10}
+              domain={{x: [1, 5], y: [10, 30]}}
+              theme={VictoryTheme.grayscale}
+            >
+              <VictoryAxis name="XAxis"
+                tickValues={[1, 2, 3, 4, 5]}
+                tickFormat={["0h", "6h", "12h", "18h", "24h"]}
+                color="red"
+                style={{
+                  axis: {stroke: "white"}
+                }}
+              />
+              <VictoryAxis
+                style={{
+                  axis: {stroke: "white"},
+                  grid: {stroke: "grey", strokeWidth: 1}
+                }}
+
+                dependentAxis
+              />
+              <VictoryGroup>
+                <VictoryLine
+                  style={{ data: { stroke: "#800000", strokeWidth:2 } }}
+                  data={dataTemp}
+                />
+                <VictoryScatter name="ScatterGraph"
+                  style={{ data: { stroke: "#800000", strokeWidth:1, fill: "white" } }}
+                  data={dataTemp}
+                  events={[{
+                    childName: "XAxis",
+                    target: "data",
+                    eventHandlers: {
+                      onPress: (evt, clickedProps) => {
+
+                        const clickedIndex = clickedProps.index;
+                        return [
+                          {
+
+                            eventKey: "all",
+                            target: 'labels',
+                            mutation: (props) => {
+
+                              return props.index === clickedIndex ? {style: {fill: "#800000"}, text: `${props.datum.y}°C`} : null;
+                            }
+                          }, {
+                            eventKey: "all",
+                            mutation: (props) => {
+
+                              return props.index === clickedIndex ? {style: {fill: "#800000"}} : null;
+                            }
+                          }, {
+                            childName: ["XAxis"],
+                            mutation: (props) => {
+                              console.log(props)
+                              return {
+                                style: Object.assign({}, props.style, {fill: "tomato"})
+                              };
+                            }
+                          }
+                        ];
+                      },
+                    }
+                  }]}
+                />
+              </VictoryGroup>
+            </VictoryChart>
+          </CardSection>
+
+          <CardSection>
+
+          </CardSection>
+
+          <CardSection style={{ justifyContent: 'space-around' }}>
+            <Button otherButtonStyle={otherButtonStyle} otherTextStyle={{ color: 'black' }}>
+              Temperatures
+            </Button>
+            <Button otherButtonStyle={otherButtonStyle} otherTextStyle={{ color: 'black' }}>
+              Humidity
+            </Button>
+          </CardSection>
+
+        </Card>
+      </View>
+    );
+  }
 };
 
 const styles = {
@@ -101,7 +144,7 @@ const styles = {
     justifyContent: 'space-around'
   },
   headerTextStyle: {
-    fontSize: 18
+    fontSize: 16
   },
   thumbnailStyle: {
     height: 50,
@@ -123,10 +166,7 @@ const styles = {
     borderRadius: 25,
     borderWidth: 2,
     borderColor: '#800000',
-    paddingLeft: 12,
-    paddingRight: 12,
-    marginLeft: 100,
-    marginRight: 100
+    padding: 7
   }
 };
 
