@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { Text, View, StatusBar } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Svg from "react-native-svg";
+import Dimensions from 'Dimensions';
 import { VictoryAxis, VictoryLine, VictoryChart, VictoryStack, VictoryTheme,
-   VictoryScatter, VictoryGroup, VictoryBar
+   VictoryScatter, VictoryGroup, VictoryBar, VictoryPie, VictoryLabel
   } from "victory-native";
 import { Card } from './common/Card';
 import { CardSection } from './common/CardSection';
@@ -16,14 +18,9 @@ const dataTemp = [
   {x: 5, y: 20}
 ];
 
+const window = Dimensions.get('window');
+
 class MonthlySummaryTemperature extends Component {
-
-
-
-
-   onPressWaypoint(datum) {
-      console.log(datum);
-    };
 
   render() {
 
@@ -50,77 +47,105 @@ class MonthlySummaryTemperature extends Component {
           </CardSection>
 
           <CardSection>
-            <VictoryChart
-              domainPadding={10}
-              domain={{x: [1, 5], y: [10, 30]}}
-              theme={VictoryTheme.grayscale}
-            >
+            <Svg width={800} height={300}>
+              <g>
+                <VictoryChart width={300}>
+                  <VictoryScatter
+                    y={(data) => Math.sin(2 * Math.PI * data.x)}
+                    samples={25}
+                    size={5}
+                    style={{ data: { fill: "tomato" }}}
+                  />
+                  <VictoryLine
+                    style={{ data: { stroke: "orange" }}}
+                    y={(data) => Math.sin(2 * Math.PI * data.x)}
+                  />
+                  <VictoryAxis/>
+                  <VictoryAxis dependentAxis/>
+                </VictoryChart>
+              </g>
+              <g transform={"translate(400, 0)"}>
+                <VictoryChart width={300}>
+                  <VictoryAxis/>
+                  <VictoryAxis dependentAxis/>
+                  <VictoryLine
+                    style={{ data: { stroke: "orange" }}}
+                    y={(data) => Math.sin(2 * Math.PI * data.x)}
+                  />
+                  <VictoryScatter
+                    y={(data) => Math.sin(2 * Math.PI * data.x)}
+                    samples={25}
+                    size={5}
+                    style={{ data: { fill: "tomato" }}}
+                  />
+                </VictoryChart>
+              </g>
+            </Svg>
+          </CardSection>
+
+
+          <CardSection style={{height:100}}>
+            <VictoryChart style={{height:80, position:'relative'}}>
               <VictoryAxis name="XAxis"
                 tickValues={[1, 2, 3, 4, 5]}
                 tickFormat={["0h", "6h", "12h", "18h", "24h"]}
-                color="red"
-                style={{
-                  axis: {stroke: "white"}
-                }}
-              />
-              <VictoryAxis
                 style={{
                   axis: {stroke: "white"},
-                  grid: {stroke: "grey", strokeWidth: 1}
+                  tickLabels: {fontSize: 10}
                 }}
-
-                dependentAxis
               />
-              <VictoryGroup>
-                <VictoryLine
-                  style={{ data: { stroke: "#800000", strokeWidth:2 } }}
-                  data={dataTemp}
-                />
-                <VictoryScatter name="ScatterGraph"
-                  style={{ data: { stroke: "#800000", strokeWidth:1, fill: "white" } }}
-                  data={dataTemp}
-                  events={[{
-                    childName: "XAxis",
-                    target: "data",
-                    eventHandlers: {
-                      onPress: (evt, clickedProps) => {
-
-                        const clickedIndex = clickedProps.index;
-                        return [
-                          {
-
-                            eventKey: "all",
-                            target: 'labels',
-                            mutation: (props) => {
-
-                              return props.index === clickedIndex ? {style: {fill: "#800000"}, text: `${props.datum.y}°C`} : null;
-                            }
-                          }, {
-                            eventKey: "all",
-                            mutation: (props) => {
-
-                              return props.index === clickedIndex ? {style: {fill: "#800000"}} : null;
-                            }
-                          }, {
-                            childName: ["XAxis"],
-                            mutation: (props) => {
-                              console.log(props)
-                              return {
-                                style: Object.assign({}, props.style, {fill: "tomato"})
-                              };
-                            }
+              <VictoryAxis dependentAxis
+                //tickFormat={[]}
+                domain={{x: [1, 2, 3]}}
+                style={{
+                  axis: {stroke: "white"},
+                  grid: {stroke: "grey"},
+                  tickLabels: {fontSize: 10}
+                }}
+              />
+              <VictoryLine
+                style={{ data: { stroke: "#800000", strokeWidth:2 } }}
+                data={dataTemp}
+                interpolation="cardinal"
+                height={50}
+                domain={[1, 3]}
+              />
+              <VictoryScatter name="ScatterGraph"
+                style={{ data: { stroke: "#800000", strokeWidth:1, fill: "white" } }}
+                data={dataTemp}
+                events={[{
+                  childName: "XAxis",
+                  target: "data",
+                  eventHandlers: {
+                    onPress: (evt, clickedProps) => {
+                      const clickedIndex = clickedProps.index;
+                      return [
+                        {
+                          eventKey: "all",
+                          target: 'labels',
+                          mutation: (props) => {
+                            return props.index === clickedIndex ? {style: {fill: "#800000"}, text: `${props.datum.y}°C`} : null;
                           }
-                        ];
-                      },
-                    }
-                  }]}
-                />
-              </VictoryGroup>
+                        }, {
+                          eventKey: "all",
+                          mutation: (props) => {
+                            return props.index === clickedIndex ? {style: {fill: "#800000"}} : null;
+                          }
+                        }, {
+                          childName: ["XAxis"],
+                          mutation: (props) => {
+                            console.log(props)
+                            return {
+                              style: Object.assign({}, props.style, {fill: "tomato"})
+                            };
+                          }
+                        }
+                      ];
+                    },
+                  }
+                }]}
+              />
             </VictoryChart>
-          </CardSection>
-
-          <CardSection>
-
           </CardSection>
 
           <CardSection style={{ justifyContent: 'space-around' }}>
