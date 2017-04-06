@@ -10,8 +10,8 @@ const RouterComponent = () => {
     <Router>
       <Scene key="Login" component={LoginForm} hideNavBar={true}  />
       <Scene key="LivingRoomTemperature" component={LivingRoomTemperature} hideNavBar={true} />
-      <Scene key="Demo" component={Demo} hideNavBar={true}  />
-      <Scene key="MonthlySummaryTemperature" component={MonthlySummaryTemperature} title="Temperature History" hideNavBar={true} initial/>
+      <Scene key="Demo" component={Demo} hideNavBar={true} />
+      <Scene key="MonthlySummaryTemperature" component={MonthlySummaryTemperature} title="Temperature History" hideNavBar={true} initial />
     </Router>
   );
 };
