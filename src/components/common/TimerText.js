@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 
-
-export default class TimerText extends Component {
+class TimerText extends Component {
 
   render() {
     const { desiredTemp, fontSize, textStyle, ...rest } = this.props;
@@ -24,3 +23,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   }
 });
+
+export { TimerText };

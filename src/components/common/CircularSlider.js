@@ -1,8 +1,8 @@
 import React, { PureComponent, PropTypes } from 'react';
 import { PanResponder, View } from 'react-native';
-import Svg, { Circle, G, LinearGradient, Path, Defs, Stop } from 'react-native-svg';
+import { Svg, Circle, G, Path } from 'react-native-svg';
 import range from 'lodash.range';
-import { interpolateHcl as interpolateGradient } from 'd3-interpolate';
+import { interpolateHcl } from 'd3-interpolate';
 
 
 function calculateArcCircle(index0, segments, radius, startAngle0 = 0, angleLength0 = 2 * Math.PI) {
@@ -35,7 +35,7 @@ function getGradientId(index) {
   return `gradient${index}`;
 }
 
-export default class CircularSlider extends PureComponent {
+class CircularSlider extends PureComponent {
 
   static propTypes = {
     onUpdate: PropTypes.func.isRequired,
@@ -153,7 +153,7 @@ export default class CircularSlider extends PureComponent {
             {
               range(segments).map(i => {
                 const { fromX, fromY, toX, toY } = calculateArcCircle(i, segments, radius, startAngle, angleLength);
-                
+
                 const d = `M ${fromX.toFixed(2)} ${fromY.toFixed(2)} A ${radius} ${radius} 0 0 1 ${toX.toFixed(2)} ${toY.toFixed(2)}`;
 
                 return (
@@ -191,3 +191,5 @@ export default class CircularSlider extends PureComponent {
     );
   }
 }
+
+export { CircularSlider };

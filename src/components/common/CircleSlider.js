@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import { PanResponder, View } from 'react-native';
-import Dimensions from 'Dimensions';
-import Svg, { Path, Circle, G, Text } from 'react-native-svg';
+import { PanResponder, Dimensions } from 'react-native';
+import { Svg, Path, Circle, G, Text } from 'react-native-svg';
 
 class CircleSlider extends Component {
-  constructor(props){
-    super(props)
+  constructor(props) {
+    super(props);
 
     this.state = {
       angle: this.props.value,
@@ -30,30 +29,30 @@ class CircleSlider extends Component {
   polarToCartesian(angle) {
     let r = this.props.dialRadius;
     let hC = this.props.dialRadius + this.props.btnRadius;
-    let a = (angle-90) * Math.PI / 180.0;
+    let a = (angle - 90) * Math.PI / 180.0;
 
     let x = hC + (r * Math.cos(a));
     let y = hC + (r * Math.sin(a));
-    return {x,y};
+    return { x, y };
   }
 
-  cartesianToPolar(x,y) {
+  cartesianToPolar(x, y) {
     let hC = this.props.dialRadius + this.props.btnRadius;
 
     if (x === 0) {
-      return y>hC ? 0 : 180;
+      return y > hC ? 0 : 180;
     }
     else if (y === 0) {
-      return x>hC ? 90 : 270;
+      return x > hC ? 90 : 270;
     }
     else {
-      return (Math.round((Math.atan((y-hC)/(x-hC)))*180/Math.PI) +
-        (x>hC ? 90 : 270));
+      return (Math.round((Math.atan((y - hC) / (x - hC))) * 180 / Math.PI) +
+        (x > hC ? 90 : 270));
     }
   }
 
   render() {
-    let width = (this.props.dialRadius + this.props.btnRadius)*2;
+    let width = (this.props.dialRadius + this.props.btnRadius) * 2;
     let bR = this.props.btnRadius;
     let dR = this.props.dialRadius;
     let startCoord = this.polarToCartesian(0);

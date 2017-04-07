@@ -1,8 +1,7 @@
 import React from 'react';
-import { Actions } from 'react-native-router-flux';
 import { Text, TouchableOpacity } from 'react-native';
 
-const Button = ({ onPress, children, otherButtonStyle, otherTextStyle }) => {
+const Button = ({ children, onPress, otherButtonStyle, otherTextStyle }) => {
   const { buttonStyle, textStyle } = styles;
 
   return (

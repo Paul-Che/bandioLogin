@@ -1,25 +1,20 @@
 import React, { Component } from 'react';
-import { AppRegistry, StyleSheet, Text, View, StatusBar, TouchableHighlight } from 'react-native';
+import { StyleSheet, Text, View, StatusBar, TouchableHighlight, Dimensions } from 'react-native';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Actions } from 'react-native-router-flux';
-import Dimensions from 'Dimensions';
-import Svg, { G, Path } from 'react-native-svg';
-import CircularSlider from './common/CircularSlider';
-import StaticCircle from './common/StaticCircle';
-import TimerText from './common/TimerText';
-import MonthlySummaryTemperature from './MonthlySummaryTemperature';
+import { CircularSlider, StaticCircle, TimerText } from './common/index';
 
 const pi = Math.PI;
 const window = Dimensions.get('window');
 
 function roundAngleToFives(angle) {
-  const fiveMinuteAngle = 2 * pi / 144;
+  const fiveMinuteAngle = (2 * pi) / 144;
   return Math.round(angle / fiveMinuteAngle) * fiveMinuteAngle;
 }
 
 function calculateTemperaturesFromAngle(angle) {
-  let desiredTemp = Math.round(angle / (2 * pi / (12 * 12)) / 6);
+  let desiredTemp = Math.round(angle / ((2 * pi) / (12 * 12)) / 6);
   if (desiredTemp < 13) {
     desiredTemp += 25;
   }
@@ -29,7 +24,7 @@ function calculateTemperaturesFromAngle(angle) {
 class LivingRoomTemperature extends Component {
 
   state = {
-    startAngle: 10/9 * pi,
+    startAngle: (10 / 9) * pi,
     angleLength: 1.8 * pi,
     temperatures: [],
     error: ''
@@ -55,26 +50,25 @@ class LivingRoomTemperature extends Component {
   }
 
   renderLastTemperature() {
-    return this.state.temperatures[0]
+    return this.state.temperatures[0];
   }
 
   render() {
-
-    const { startAngle, angleLength, temperatures } = this.state;
+    const { startAngle, angleLength } = this.state;
     const { textStyle, centerContainer } = styles;
 
     return (
       <View style={{ height: window.height, width: window.width }}>
-        <StatusBar hidden={true} />
+        <StatusBar hidden />
 
-        <View style={[centerContainer, {height: window.height/5}]}>
+        <View style={[centerContainer, { height: window.height / 5 }]}>
           <Text style={[textStyle, { fontSize: 25, color: '#5F5F5F' }]}>Living Room</Text>
         </View>
 
         <View style={[centerContainer, { flex: 1 }]}>
           <View style={{ position: 'absolute' }}>
             <StaticCircle
-              startAngle={10/9 * pi}
+              startAngle={(10 / 9) * pi}
               angleLength={1.8 * pi}
               segments={20}
               strokeWidth={37}
@@ -100,24 +94,20 @@ class LivingRoomTemperature extends Component {
           <Text style={textStyle}>Desired Temp.</Text>
 
           <TimerText
-            textStyle={[textStyle, { fontSize: 75}]}
+            textStyle={[textStyle, { fontSize: 75 }]}
             desiredTemp={calculateTemperaturesFromAngle(startAngle)}
           />
         </View>
 
-        <View style={[centerContainer, { height: window.height/4 }]}>
+        <View style={[centerContainer, { height: window.height / 4 }]}>
           <Text style={textStyle}>Current Temp.</Text>
           <Text style={[textStyle, { fontSize: 75 }]}>{this.renderLastTemperature()}</Text>
         </View>
 
 
         <TouchableHighlight onPress={() => Actions.MonthlySummaryTemperature()}>
-          <Icon name="arrow-right" style={[textStyle, {fontSize: 18, alignSelf: 'flex-end'}]} />
+          <Icon name="arrow-right" style={[textStyle, { fontSize: 18, alignSelf: 'flex-end' }]} />
         </TouchableHighlight>
-
-
-
-
       </View>
     );
   }
@@ -128,7 +118,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
-  textStyle:{
+  textStyle: {
     fontFamily: 'HelveticaNeue-Light',
     color: '#A4A4A4',
     fontSize: 14

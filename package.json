@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "axios": "^0.15.3",
+    "eslint-config-rallycoding": "^3.2.0",
     "lodash.random": "^3.2.0",
     "lodash.range": "^3.2.0",
     "react": "15.4.2",

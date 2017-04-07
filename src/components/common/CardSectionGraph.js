@@ -1,98 +1,89 @@
 import React, { Component } from 'react';
-import { Text, View, StatusBar } from 'react-native';
+import { Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Svg, { G } from "react-native-svg";
-import Dimensions from 'Dimensions';
-import { VictoryAxis, VictoryLine, VictoryChart, VictoryStack, VictoryTheme,
-   VictoryScatter, VictoryGroup, VictoryBar, VictoryPie, VictoryLabel, VictorySharedEvents
-  } from "victory-native";
-import { Card } from './Card';
-import { CardSection } from './CardSection';
-import { Button } from './Button';
-import { MyAppText } from './MyAppText';
-import { ListIcons } from './ListIcons';
-
-const dataTemp = [
-  {x: 1, y: 15},
-  {x: 2, y: 20},
-  {x: 3, y: 22},
-  {x: 4, y: 18},
-  {x: 5, y: 20}
-];
+import { Svg } from 'react-native-svg';
+import { VictoryAxis, VictoryLine, VictoryChart, VictoryScatter } from 'victory-native';
+import { Card, CardSection, Button } from './index';
 
 class CardSectionGraph extends Component {
+  state = { buttonColor: 'grey' };
 
   render() {
+    const {
+      headerContentStyle, IconContainerStyle, headerTextStyle, otherButtonStyle,
+      otherTextStyle
+    } = styles;
 
     const {
-      thumbnailStyle,
-      headerStyle,
-      headerContentStyle,
-      IconContainerStyle,
-      headerTextStyle,
-      otherButtonStyle,
-      otherSectionStyle,
-      otherTextStyle,
-      imageStyle
-     } = styles;
+      pointLabel = '°C',
+      TBColor = '#800000',
+      HBColor = 'grey',
+      DisplayColor = '#800000',
+      data = this.props.temp
+    } = this.state;
 
     return (
       <Card>
 
-        <CardSection style={{borderColor: 'white'}}>
+        <CardSection style={{ borderColor: 'white' }}>
           <View style={IconContainerStyle}>
             <Icon style={{ fontSize: 17 }} name="thermometer-quarter" />
           </View>
           <View style={headerContentStyle}>
             <Text style={headerTextStyle}>Periodic Summary of Temperatures</Text>
-            <Text style={{fontSize: 10}}>Since Mai 2016</Text>
+            <Text style={{ fontSize: 10 }}>Today</Text>
           </View>
         </CardSection>
 
-        <CardSection style={{justifyContent: 'center', height: 150, borderColor: 'white'}}>
+        <CardSection style={{ justifyContent: 'center', height: 150, borderColor: 'white' }}>
           <Svg height={150}>
             <VictoryChart width={400} height={150}>
               <VictoryAxis
                 tickValues={[1, 2, 3, 4, 5]}
-                tickFormat={["0h", "6h", "12h", "18h", "24h"]}
+                tickFormat={['0h', '6h', '12h', '18h', '24h']}
                 style={{
-                  axis: {stroke: "white"},
-                  tickLabels: {fontSize: 15}
+                  axis: { stroke: 'white' },
+                  tickLabels: { fontSize: 15 }
                 }}
               />
-              <VictoryAxis dependentAxis
+              <VictoryAxis
+                dependentAxis
                 tickFormat={[]}
                 style={{
-                  axis: {stroke: "white"},
-                  grid: {stroke: "grey"}
+                  axis: { stroke: 'white' },
+                  grid: { stroke: 'grey' }
                 }}
               />
               <VictoryLine
-                style={{ data: { stroke: "#800000", strokeWidth:3 } }}
-                data={dataTemp}
+                style={{ data: { stroke: DisplayColor, strokeWidth: 3 } }}
+                data={data}
                 interpolation="cardinal"
                 domain={[1, 3]}
               />
               <VictoryScatter
-                style={{ data: { stroke: "#800000", strokeWidth:2, fill: "white" } }}
-                data={dataTemp}
-                size= {5}
+                name="scatter"
+                style={{ data: { stroke: DisplayColor, strokeWidth: 2, fill: 'white' } }}
+                data={data}
+                size={5}
                 events={[{
-                  target: "data",
+                  target: 'data',
                   eventHandlers: {
                     onPress: (evt, clickedProps) => {
                       const clickedIndex = clickedProps.index;
                       return [
                         {
-                          eventKey: "all",
+                          eventKey: 'all',
                           target: 'labels',
                           mutation: (props) => {
-                            return props.index === clickedIndex ? {style: {fill: "#800000", fontSize: 20}, text: `${props.datum.y}°C`} : null;
+                            return props.index === clickedIndex ? {
+                              style: { fill: DisplayColor, fontSize: 20 },
+                              text: `${props.datum.y} ${pointLabel}` } : null;
                           }
                         }, {
-                          eventKey: "all",
+                          eventKey: 'all',
                           mutation: (props) => {
-                            return props.index === clickedIndex ? {style: {fill: "#800000", strokeWidth:4 }} : null;
+                            return props.index === clickedIndex ? {
+                              style: { fill: DisplayColor, strokeWidth: 4 } } : null;
                           }
                         }
                       ];
@@ -105,10 +96,35 @@ class CardSectionGraph extends Component {
         </CardSection>
 
         <CardSection style={{ justifyContent: 'space-around', borderColor: 'white' }}>
-          <Button otherButtonStyle={otherButtonStyle} otherTextStyle={otherTextStyle}>
-            Temperatures
+          <Button
+            otherButtonStyle={[otherButtonStyle, { borderColor: TBColor }]}
+            otherTextStyle={[otherTextStyle, { color: TBColor }]}
+            onPress={() => {
+              console.log(this.props);
+              this.setState(
+                { TBColor: '#800000',
+                  HBColor: 'grey',
+                  DisplayColor: '#800000',
+                  pointLabel: '°C',
+                  data: this.props.temp }
+              );
+            }}
+          >
+            Temperature
           </Button>
-          <Button otherButtonStyle={otherButtonStyle} otherTextStyle={otherTextStyle}>
+          <Button
+            otherButtonStyle={[otherButtonStyle, { borderColor: HBColor }]}
+            otherTextStyle={[otherTextStyle, { color: HBColor }]}
+            onPress={() => {
+              this.setState(
+                { HBColor: '#002D88',
+                  TBColor: 'grey',
+                  DisplayColor: '#002D88',
+                  pointLabel: '%',
+                  data: this.props.hum }
+              );
+           }}
+          >
             Humidity
           </Button>
         </CardSection>
@@ -116,7 +132,7 @@ class CardSectionGraph extends Component {
       </Card>
     );
   }
-};
+}
 
 const styles = {
   headerContentStyle: {
@@ -141,17 +157,20 @@ const styles = {
     flex: 1,
     width: null
   },
-  otherButtonStyle:{
+  otherButtonStyle: {
     backgroundColor: null,
     borderRadius: 20,
-    borderWidth: 1,
-    borderColor: '#800000',
-    paddingLeft: 20,
-    paddingRight: 20
+    borderWidth: 2,
+    borderColor: 'grey',
+    paddingLeft: 15,
+    paddingRight: 15
   },
   otherTextStyle: {
     fontSize: 10,
-    color: 'black'
+    fontWeight: 'bold',
+    color: 'grey',
+    paddingTop: 5,
+    paddingBottom: 5
   }
 };
 

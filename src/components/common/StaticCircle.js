@@ -44,7 +44,7 @@ function getGradientId(index) {
   return `gradient${index}`;
 }
 
-export default class StaticCircle extends PureComponent {
+class StaticCircle extends PureComponent {
 
   static propTypes = {
     startAngle: PropTypes.number.isRequired,
@@ -180,3 +180,5 @@ export default class StaticCircle extends PureComponent {
     );
   }
 }
+
+export { StaticCircle };

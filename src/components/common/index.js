@@ -8,3 +8,6 @@ export * from './Confirm';
 export * from './MyAppText';
 export * from './ListIcons';
 export * from './CardSectionGraph';
+export * from './CircularSlider';
+export * from './StaticCircle';
+export * from './TimerText';
