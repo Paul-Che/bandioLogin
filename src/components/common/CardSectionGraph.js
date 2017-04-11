@@ -14,8 +14,11 @@ class CardSectionGraph extends Component {
       otherTextStyle
     } = styles;
 
+    const { iconName, title, subtitle, axisValues, firstButtonName,
+      firstUnit, secondButtonName, secondUnit, temp, hum } = this.props;
+
     const {
-      pointLabel = '°C',
+      pointLabel = firstUnit,
       TBColor = '#800000',
       HBColor = 'grey',
       DisplayColor = '#800000',
@@ -25,13 +28,13 @@ class CardSectionGraph extends Component {
     return (
       <Card>
 
-        <CardSection style={{ borderColor: 'white' }}>
+        <CardSection style={{ borderColor: 'white', borderRadius: 2 }}>
           <View style={IconContainerStyle}>
-            <Icon style={{ fontSize: 17 }} name="thermometer-quarter" />
+            <Icon style={{ fontSize: 17 }} name={iconName} />
           </View>
           <View style={headerContentStyle}>
-            <Text style={headerTextStyle}>Periodic Summary of Temperatures</Text>
-            <Text style={{ fontSize: 10 }}>Today</Text>
+            <Text style={headerTextStyle}>{title}</Text>
+            <Text style={{ fontSize: 10 }}>{subtitle}</Text>
           </View>
         </CardSection>
 
@@ -40,7 +43,7 @@ class CardSectionGraph extends Component {
             <VictoryChart width={370} height={150}>
               <VictoryAxis
                 tickValues={[1, 2, 3, 4, 5]}
-                tickFormat={['0h', '6h', '12h', '18h', '24h']}
+                tickFormat={axisValues}
                 style={{
                   axis: { stroke: 'white' },
                   tickLabels: { fontSize: 15 }
@@ -95,7 +98,11 @@ class CardSectionGraph extends Component {
           </Svg>
         </CardSection>
 
-        <CardSection style={{ justifyContent: 'space-around', borderColor: 'white' }}>
+        <CardSection
+          style={{ justifyContent: 'space-around',
+            borderColor: 'white',
+            borderRadius: 2 }}
+        >
           <Button
             otherButtonStyle={[otherButtonStyle, { borderColor: TBColor }]}
             otherTextStyle={[otherTextStyle, { color: TBColor }]}
@@ -105,12 +112,12 @@ class CardSectionGraph extends Component {
                 { TBColor: '#800000',
                   HBColor: 'grey',
                   DisplayColor: '#800000',
-                  pointLabel: '°C',
-                  data: this.props.temp }
+                  pointLabel: firstUnit,
+                  data: temp }
               );
             }}
           >
-            Temperature
+            {firstButtonName}
           </Button>
           <Button
             otherButtonStyle={[otherButtonStyle, { borderColor: HBColor }]}
@@ -120,12 +127,12 @@ class CardSectionGraph extends Component {
                 { HBColor: '#002D88',
                   TBColor: 'grey',
                   DisplayColor: '#002D88',
-                  pointLabel: '%',
-                  data: this.props.hum }
+                  pointLabel: secondUnit,
+                  data: hum }
               );
            }}
           >
-            Humidity
+            {secondButtonName}
           </Button>
         </CardSection>
 

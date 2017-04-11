@@ -2,7 +2,7 @@ import React from 'react';
 import { Scene, Router } from 'react-native-router-flux';
 import LoginForm from './components/login/LoginForm';
 import LivingRoomTemperature from './components/LivingRoomTemperature';
-import TemperatureHistory from './components/TemperatureHistory';
+import TemperatureHistory from './components/temperatureHistory/TemperatureHistory';
 
 const RouterComponent = () => {
   const { navigationBarStyle, titleStyle } = styles;
