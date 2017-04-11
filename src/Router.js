@@ -2,25 +2,27 @@ import React from 'react';
 import { Scene, Router } from 'react-native-router-flux';
 import LoginForm from './components/login/LoginForm';
 import LivingRoomTemperature from './components/LivingRoomTemperature';
-import MonthlySummaryTemperature from './components/MonthlySummaryTemperature';
-import Demo from './components/Demo';
+import TemperatureHistory from './components/TemperatureHistory';
 
 const RouterComponent = () => {
   const { navigationBarStyle, titleStyle } = styles;
 
   return (
-    <Router>
+    <Router barButtonIconStyle={{ tintColor: 'white' }} >
       <Scene key="Login" component={LoginForm} hideNavBar />
-      <Scene key="LivingRoomTemperature" component={LivingRoomTemperature} hideNavBar />
-      <Scene key="Demo" component={Demo} hideNavBar />
       <Scene
-        key="MonthlySummaryTemperature"
-        component={MonthlySummaryTemperature}
+        key="LivingRoomTemperature"
+        component={LivingRoomTemperature}
+        hideNavBar
+        initial
+      />
+      <Scene
+        key="TemperatureHistory"
+        component={TemperatureHistory}
         navigationBarStyle={navigationBarStyle}
         titleStyle={titleStyle}
         title="Temperature History"
         hideNavBar={false}
-        initial
       />
     </Router>
   );
@@ -29,7 +31,17 @@ const RouterComponent = () => {
 const styles = {
   navigationBarStyle: {
     backgroundColor: '#800000',
-    height: 60
+    alignSelf: 'center',
+    height: 60,
+    margin: 0.4,
+    borderWidth: 1,
+    borderRadius: 2,
+    borderColor: '#ddd',
+    borderBottomWidth: 0,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 2
   },
   titleStyle: {
     height: 19,

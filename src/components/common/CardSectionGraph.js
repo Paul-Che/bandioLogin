@@ -37,7 +37,7 @@ class CardSectionGraph extends Component {
 
         <CardSection style={{ justifyContent: 'center', height: 150, borderColor: 'white' }}>
           <Svg height={150}>
-            <VictoryChart width={400} height={150}>
+            <VictoryChart width={370} height={150}>
               <VictoryAxis
                 tickValues={[1, 2, 3, 4, 5]}
                 tickFormat={['0h', '6h', '12h', '18h', '24h']}

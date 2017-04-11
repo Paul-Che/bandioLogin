@@ -105,7 +105,7 @@ class LivingRoomTemperature extends Component {
         </View>
 
 
-        <TouchableHighlight onPress={() => Actions.MonthlySummaryTemperature()}>
+        <TouchableHighlight onPress={() => Actions.TemperatureHistory()}>
           <Icon name="arrow-right" style={[textStyle, { fontSize: 18, alignSelf: 'flex-end' }]} />
         </TouchableHighlight>
       </View>
