@@ -14,7 +14,7 @@ const RouterComponent = () => {
         key="LivingRoomTemperature"
         component={LivingRoomTemperature}
         hideNavBar
-        initial
+
       />
       <Scene
         key="TemperatureHistory"
@@ -23,6 +23,7 @@ const RouterComponent = () => {
         titleStyle={titleStyle}
         title="Temperature History"
         hideNavBar={false}
+        initial
       />
     </Router>
   );

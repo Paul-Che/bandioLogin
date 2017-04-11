@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { View, StatusBar } from 'react-native';
 import { CardSectionGraph } from '../common/index';
-import Header from './Header';
-import MonthlyTempScrollView from './MonthlyTempScrollView';
+import { Header, MonthlyTempScrollView } from './Index';
 
 const dataTemp = [
   { x: 1, y: 15 },
