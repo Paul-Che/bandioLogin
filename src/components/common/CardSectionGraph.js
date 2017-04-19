@@ -91,6 +91,27 @@ class CardSectionGraph extends Component {
                         }
                       ];
                     },
+                    onLoad: (evt, clickedProps) => {
+                      console.log('onLoad');
+                      const clickedIndex = clickedProps.index;
+                      return [
+                        {
+                          eventKey: 'all',
+                          target: 'labels',
+                          mutation: (props) => {
+                            return props.index === clickedIndex ? {
+                              style: { fill: DisplayColor, fontSize: 20 },
+                              text: `${props.datum.y} ${pointLabel}` } : null;
+                          }
+                        }, {
+                          eventKey: 'all',
+                          mutation: (props) => {
+                            return props.index === clickedIndex ? {
+                              style: { fill: DisplayColor, strokeWidth: 4 } } : null;
+                          }
+                        }
+                      ];
+                    }
                   }
                 }]}
               />
