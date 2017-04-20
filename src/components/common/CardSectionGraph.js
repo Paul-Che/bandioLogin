@@ -69,6 +69,7 @@ class CardSectionGraph extends Component {
                 data={data}
                 size={5}
                 events={[{
+                  childname: ['firstButtonName', 'secondButtonName'],
                   target: 'data',
                   eventHandlers: {
                     onPress: (evt, clickedProps) => {
@@ -125,6 +126,7 @@ class CardSectionGraph extends Component {
             borderRadius: 2 }}
         >
           <Button
+            name='firstButtonName'
             otherButtonStyle={[otherButtonStyle, { borderColor: TBColor }]}
             otherTextStyle={[otherTextStyle, { color: TBColor }]}
             onPress={() => {
@@ -141,6 +143,7 @@ class CardSectionGraph extends Component {
             {firstButtonName}
           </Button>
           <Button
+            name='secondButtonName'
             otherButtonStyle={[otherButtonStyle, { borderColor: HBColor }]}
             otherTextStyle={[otherTextStyle, { color: HBColor }]}
             onPress={() => {
